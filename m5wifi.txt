@@ -1,0 +1,78 @@
+/ Test project for wifi and m5 stick plus
+
+#include <M5StickCPlus2.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+
+// network credentials
+const char *ssid = "your_ssid";
+const char *password = "your_password";
+
+void setup()
+{
+
+  Serial.begin(115200);       // initialize serial communication
+  M5.begin();                 // Initialize M5Stack
+  M5.Lcd.setRotation(1);      // rotate 90 degree
+  M5.Lcd.clear(BLACK);        // clear screen
+  M5.Lcd.setTextColor(WHITE); // set text color
+  M5.Lcd.setTextSize(2);      // set text size
+  M5.Lcd.setCursor(10, 40);   // set cursor position
+  M5.Lcd.println("wifi test");
+  Serial.println("wifi test");
+
+  // start wifi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("WiFi connected");
+  M5.Lcd.clear(BLACK); // clear screen
+  M5.Lcd.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  // start http client
+  HTTPClient http;
+  M5.Lcd.clear(BLACK); // clear screen
+  M5.Lcd.println("connecting to http");
+  http.begin("http://google.com");
+  int httpCode = http.GET();
+  if (httpCode > 0)
+  {
+    Serial.println("HTTP Response code: " + String(httpCode));
+    String payload = http.getString();
+    Serial.println(payload);
+    M5.Lcd.clear(BLACK);    // clear screen
+    M5.Lcd.setCursor(0, 0); // set cursor position
+    M5.Lcd.println(payload);
+    http.end();
+  }
+  else
+  {
+    M5.Lcd.clear(BLACK); // clear screen
+
+    M5.Lcd.println("Failed to connect");
+  }
+}
+
+void loop()
+{
+  // put your main code here, to run repeatedly:
+}
+
+
+
+
+
+platformio.ini
+
+[env:m5stick-c]
+platform = espressif32
+board = m5stick-c
+framework = arduino
+lib_deps = m5stack/M5StickCPlus2@^1.0.2
+monitor_speed = 115200
+
