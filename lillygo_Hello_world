@@ -1,0 +1,13 @@
+#include  <TFT_eSPI.h>  // Include the library !!ADD ANGLE BRACKETS!!
+TFT_eSPI tft = TFT_eSPI();  // Create an instance of the display
+void setup() {
+  tft.init();                 // Initialize the display
+  tft.setRotation(1);         // Set display orientation
+  tft.fillScreen(TFT_BLACK);  // Clear the screen with black
+  tft.setTextColor(TFT_WHITE); // Set text color to white
+  tft.setTextSize(2);         // Set text size
+  tft.drawString("Hello, World!", 20, 50);  // Display text
+}
+void loop() {
+  // Your main loop code here
+}
